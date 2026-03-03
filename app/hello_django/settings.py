@@ -26,6 +26,7 @@ DEBUG = os.environ.get("DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS",
+    "artist-gallery.onrender.com"
     "localhost 127.0.0.1 [::1]"
 ).split(" ")
 
