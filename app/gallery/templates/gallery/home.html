@@ -1,0 +1,85 @@
+{% extends "gallery/base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+  {% if artist %}
+    <section style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap; margin-bottom:50px;">
+      
+      {% if artist.portrait %}
+        <div style="flex:0 0 260px;">
+          <img src="{{ artist.portrait.url }}" 
+               alt="{{ artist.name }}"
+               style="width:100%; border-radius:10px; border:1px solid #eee;">
+        </div>
+      {% endif %}
+
+      <div style="flex:1; min-width:260px;">
+        <h1 class="h1">{{ artist.name }}</h1>
+
+        {% if artist.city %}
+          <div class="muted" style="margin-bottom:10px;">
+            {{ artist.city }}
+          </div>
+        {% endif %}
+
+        {% if artist.short_bio %}
+          <p>{{ artist.short_bio }}</p>
+        {% endif %}
+
+        {% if artist.statement %}
+          <p class="muted" style="margin-top:14px;">
+            {{ artist.statement|truncatewords:40 }}
+          </p>
+        {% endif %}
+        {% if artist.contact_email %}
+            <p target="_blank">Email: {{ artist.contact_email }}</p>
+        {% endif %}
+
+        <div style="margin-top:18px; display:flex; gap:14px; flex-wrap:wrap;">
+          {% if artist.instagram_url %}
+            <a href="{{ artist.instagram_url }}" target="_blank">Instagram</a>
+          {% endif %}
+          {% if artist.website_url %}
+            <a href="{{ artist.website_url }}" target="_blank">Website</a>
+          {% endif %}
+          {% if artist.facebook_url %}
+            <a href="{{ artist.facebook_url }}" target="_blank">Facebook</a>
+          {% endif %}
+          {% if artist.linkedin_url %}
+            <a href="{{ artist.linkedin_url }}" target="_blank">LinkedIn</a>
+          {% endif %}
+          {% if artist.ecommerce_portal_url %}
+            <a href="{{ artist.ecommerce_portal_url }}" target="_blank">Shop</a>
+          {% endif %}
+        </div>
+
+      </div>
+    </section>
+  {% endif %}
+
+  <section>
+    <h2 style="margin-bottom:20px;">Selected Works</h2>
+
+    <div class="grid">
+      {% for a in featured %}
+        <a class="card" href="{% url 'gallery:artwork_detail' a.slug %}">
+          {% if a.main_image %}
+            <img class="thumb" src="{{ a.main_image.url }}" alt="{{ a.title }}">
+          {% elif a.images.first %}
+            <img class="thumb" src="{{ a.images.first.image.url }}" alt="{{ a.title }}">
+          {% else %}
+            <div class="thumb" style="background:#f4f4f4;"></div>
+          {% endif %}
+          <div class="card-body">
+            <div>{{ a.title }}</div>
+            <div class="meta">
+              {% if a.year %}{{ a.year }} · {% endif %}
+              {{ a.technique }}
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+{% endblock %}

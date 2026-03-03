@@ -1,0 +1,28 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Gallery{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'gallery/site.css' %}">
+</head>
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a class="brand" href="{% url 'gallery:home' %}">Home</a>
+      <a href="{% url 'gallery:artworks_list' %}">Works</a>
+      <a href="{% url 'gallery:series_list' %}">Series</a>
+      <a href="/admin/">Admin</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="muted">© {% now "Y" %}</div>
+  </footer>
+</body>
+</html>

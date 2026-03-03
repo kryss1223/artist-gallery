@@ -1,0 +1,15 @@
+{% extends "gallery/base.html" %}
+{% block title %}Series{% endblock %}
+{% block content %}
+  <h1 class="h1">Series</h1>
+  <ul>
+    {% for s in series %}
+      <li style="margin:10px 0;">
+        <a href="{% url 'gallery:series_detail' s.slug %}">{{ s.name }}</a>
+        {% if s.description %}<div class="meta">{{ s.description|truncatechars:120 }}</div>{% endif %}
+      </li>
+    {% empty %}
+      <p class="muted">No series yet.</p>
+    {% endfor %}
+  </ul>
+{% endblock %}

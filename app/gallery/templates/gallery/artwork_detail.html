@@ -1,0 +1,50 @@
+{% extends "gallery/base.html" %}
+{% block title %}{{ artwork.title }}{% endblock %}
+{% block content %}
+  <h1 class="h1">{{ artwork.title }}</h1>
+  <div class="muted">
+    {% if artwork.year %}{{ artwork.year }} · {% endif %}
+    {% if artwork.series %}{{ artwork.series.name }} · {% endif %}
+    {{ artwork.technique }}
+  </div>
+
+  <div style="margin:18px 0;">
+    {% if artwork.main_image %}
+      <img style="width:100%; max-height:70vh; object-fit:contain; border:1px solid var(--line); border-radius:10px;"
+           src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
+    {% endif %}
+  </div>
+
+  {% if artwork.images.all %}
+    <div class="grid">
+      {% for img in artwork.images.all %}
+        <div class="card">
+          <img class="thumb" style="aspect-ratio:4/3;" src="{{ img.image.url }}" alt="{{ img.alt_text|default:artwork.title }}">
+          {% if img.caption %}
+            <div class="card-body"><div class="meta">{{ img.caption }}</div></div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div style="margin-top:22px;">
+    {% if artwork.height_cm and artwork.width_cm %}
+      <div class="meta">
+        {{ artwork.height_cm }} × {{ artwork.width_cm }}{% if artwork.depth_cm %} × {{ artwork.depth_cm }}{% endif %} cm
+      </div>
+    {% endif %}
+
+    {% if artwork.description %}
+      <p style="margin-top:14px;">{{ artwork.description|linebreaksbr }}</p>
+    {% endif %}
+
+    <div style="margin-top:18px;">
+      {% if artwork.show_price and artwork.price_eur and not artwork.enquire_only %}
+        <div><strong>{{ artwork.price_eur }} €</strong></div>
+      {% else %}
+        <div class="muted">Enquire for availability</div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
