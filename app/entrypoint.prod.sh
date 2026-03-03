@@ -1,14 +1,11 @@
 #!/bin/sh
+set -e
 
-if [ "$DATABASE" = "postgres" ]
-then
-    echo "Waiting for postgres..."
+# Run migrations (safe for demo; no-op if already applied)
+python manage.py migrate --noinput
 
-    while ! nc -z $SQL_HOST $SQL_PORT; do
-      sleep 0.1
-    done
+# Collect static (needed for admin CSS etc.)
+python manage.py collectstatic --noinput
 
-    echo "PostgreSQL started"
-fi
-
-exec "$@"
+# Start gunicorn on Render's port
+exec gunicorn hello_django.wsgi:application --bind 0.0.0.0:${PORT:-8000}
