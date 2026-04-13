@@ -1,0 +1,36 @@
+{% extends "gallery/base.html" %}
+{% block title %}Works{% endblock %}
+{% block content %}
+  <h1 class="h1">Works</h1>
+
+  <div class="muted" style="margin-bottom:16px;">
+    Filter by series:
+    <a href="{% url 'gallery:artworks_list' %}">All</a>
+    {% for s in series %}
+      · <a href="{% url 'gallery:artworks_list' %}?series={{ s.slug }}">{{ s.name }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="grid">
+    {% for a in artworks %}
+      <a class="card" href="{% url 'gallery:artwork_detail' a.slug %}">
+        {% if a.main_image %}
+          <img class="thumb" src="{{ a.main_image.url }}" alt="{{ a.title }}">
+        {% elif a.images.first %}
+          <img class="thumb" src="{{ a.images.first.image.url }}" alt="{{ a.title }}">
+        {% else %}
+          <div class="thumb" style="background:#f4f4f4;"></div>
+        {% endif %}
+        <div class="card-body">
+          <div>{{ a.title }}</div>
+          <div class="meta">
+            {% if a.series %}{{ a.series.name }} · {% endif %}
+            {% if a.year %}{{ a.year }}{% endif %}
+          </div>
+        </div>
+      </a>
+    {% empty %}
+      <p class="muted">No artworks published yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

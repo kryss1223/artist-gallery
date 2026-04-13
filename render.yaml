@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: artist-gallery-nginx
+    env: docker
+    dockerfilePath: nginx/Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: DJANGO_UPSTREAM
+        value: artist-gallery-django:8000
+
+  - type: pserv
+    name: artist-gallery-django
+    env: docker
+    dockerfilePath: app/Dockerfile.prod
+    dockerContext: app
+    plan: free
+    envVars:
+      - key: DEBUG
+        value: "0"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "ramirezstudio.onrender.com"  # luego lo ajustas al hostname final
+      - key: SECRET_KEY
+        generateValue: true

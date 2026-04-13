@@ -1,0 +1,197 @@
+{% extends "gallery/base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+  {% if artist %}
+    <section class="hero">
+      <div class="hero__content">
+        <div>
+          <p class="eyebrow">Special Projects Around Europe</p>
+          <h1 class="hero__title"> Artist Julius Njau & {{ artist.name }}</h1>
+        </div>
+
+        <div class="hero__meta">
+          {% if artist.city %}
+            <span class="hero__pill">{{ artist.city }}</span>
+          {% endif %}
+          <span class="hero__pill">Original Works</span>
+          <span class="hero__pill">Selected Collection</span>
+        </div>
+
+        {% if artist.statement %}
+          <p class="hero__lead">{{ artist.statement|truncatewords:34 }}</p>
+        {% elif artist.short_bio %}
+          <p class="hero__lead">{{ artist.short_bio }}</p>
+        {% elif artist.biography %}
+          <p class="hero__lead">{{ artist.biography|truncatewords:34 }}</p>
+        {% else %}
+          <p class="hero__lead">
+            Discover a curated body of work shaped by expressive forms, personal vision, and contemporary artistic language.
+          </p>
+        {% endif %}
+
+        <div class="hero__actions">
+          <a href="#selected-works" class="btn btn--primary">View Selected Works</a>
+          {% if artist.contact_email %}
+            <a href="#contact" class="btn btn--ghost">Make an Inquiry</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="hero__media">
+        <div class="hero__portrait-card">
+          {% if artist.portrait %}
+            <img
+              src="{{ artist.portrait.url }}"
+              alt="{{ artist.name }}"
+              class="hero__portrait"
+            >
+          {% else %}
+            <div class="hero__fallback">
+              <div>
+                <strong>{{ artist.name }}</strong><br>
+                <span>Artist portrait coming soon</span>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <section class="intro">
+      <div class="intro__inner">
+        <aside class="intro__sidebar">
+          {% if artist.city %}
+            <p class="intro__label">Based in</p>
+            <p class="intro__value">{{ artist.city }}</p>
+          {% endif %}
+        </aside>
+
+        <div class="intro__copy">
+          {% if artist.short_bio %}
+            <p>{{ artist.short_bio }}</p>
+          {% endif %}
+
+          {% if artist.biography %}
+            <p>{{ artist.biography|truncatewords:70 }}</p>
+          {% elif artist.statement and not artist.short_bio %}
+            <p>{{ artist.statement|truncatewords:70 }}</p>
+          {% endif %}
+
+          <div class="link-row">
+            {% if artist.instagram_url %}
+              <a href="{{ artist.instagram_url }}" target="_blank" rel="noopener noreferrer" class="text-link">Instagram</a>
+            {% endif %}
+            {% if artist.website_url %}
+              <a href="{{ artist.website_url }}" target="_blank" rel="noopener noreferrer" class="text-link">Website</a>
+            {% endif %}
+            {% if artist.facebook_url %}
+              <a href="{{ artist.facebook_url }}" target="_blank" rel="noopener noreferrer" class="text-link">Facebook</a>
+            {% endif %}
+            {% if artist.linkedin_url %}
+              <a href="{{ artist.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-link">LinkedIn</a>
+            {% endif %}
+            {% if artist.ecommerce_portal_url %}
+              <a href="{{ artist.ecommerce_portal_url }}" target="_blank" rel="noopener noreferrer" class="text-link">Shop</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% else %}
+    <section class="hero">
+      <div class="hero__content">
+        <div>
+          <p class="eyebrow">Artist Portfolio</p>
+          <h1 class="hero__title">Contemporary Art Collection</h1>
+        </div>
+        <p class="hero__lead">
+          Explore a curated gallery of original works, distinctive series, and collector-focused presentation.
+        </p>
+        <div class="hero__actions">
+          <a href="#selected-works" class="btn btn--primary">View Selected Works</a>
+        </div>
+      </div>
+
+      <div class="hero__media">
+        <div class="hero__portrait-card">
+          <div class="hero__fallback">
+            <div>
+              <strong>Artist profile pending</strong><br>
+              <span>Add an active ArtistProfile from the admin panel</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <section id="selected-works" class="works-section">
+    <div class="section-heading">
+      <p class="eyebrow">Collection</p>
+      <h2 class="section-title">Selected Works</h2>
+    </div>
+
+    {% if featured %}
+      <div class="artwork-grid">
+        {% for a in featured %}
+          <a class="artwork-card" href="{% url 'gallery:artwork_detail' a.slug %}">
+            <div class="artwork-card__media">
+              {% if a.main_image %}
+                <img
+                  class="artwork-card__image"
+                  src="{{ a.main_image.url }}"
+                  alt="{{ a.title }}"
+                >
+              {% elif a.images.first %}
+                <img
+                  class="artwork-card__image"
+                  src="{{ a.images.first.image.url }}"
+                  alt="{% if a.images.first.alt_text %}{{ a.images.first.alt_text }}{% else %}{{ a.title }}{% endif %}"
+                >
+              {% else %}
+                <div class="artwork-card__placeholder">
+                  <div>
+                    <strong>{{ a.title }}</strong><br>
+                    <span>Image coming soon</span>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="artwork-card__body">
+              <h3 class="artwork-card__title">{{ a.title }}</h3>
+              <p class="artwork-card__meta">
+                {% if a.year %}{{ a.year }}{% endif %}
+                {% if a.year and a.technique %} · {% endif %}
+                {% if a.technique %}{{ a.technique }}{% endif %}
+                {% if a.series %} · {{ a.series.name }}{% endif %}
+              </p>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-box">
+        No featured works are available yet. Publish artworks in the admin panel to display them here.
+      </div>
+    {% endif %}
+  </section>
+
+  {% if artist and artist.contact_email %}
+    <section id="contact" class="contact-panel">
+      <div class="contact-panel__inner">
+        <p class="eyebrow">Inquiries</p>
+        <h2 class="contact-panel__title">Artwork Availability & Collaborations</h2>
+        <p class="contact-panel__text">
+          For artwork availability, commissions, exhibitions, collaborations, or general inquiries, please get in touch directly by email.
+        </p>
+        <a class="btn btn--primary" href="mailto:{{ artist.contact_email }}">
+          {{ artist.contact_email }}
+        </a>
+      </div>
+    </section>
+  {% endif %}
+
+{% endblock %}
