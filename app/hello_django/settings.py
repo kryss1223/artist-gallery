@@ -33,7 +33,7 @@ ALLOWED_HOSTS = os.environ.get(
     
 ).split(" ")
 
-CSRF_TRUSTED_ORIGINS = [" https://www.artistjuliusnjauanabelenramirezeuspecialprojects.com"]
+CSRF_TRUSTED_ORIGINS = ["https://www.artistjuliusnjauanabelenramirezeuspecialprojects.com"]
 
 # Application definition
 
