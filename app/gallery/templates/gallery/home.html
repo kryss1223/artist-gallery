@@ -3,116 +3,12 @@
 
 {% block content %}
 
-  {% if artists %}
+  {% if artist %}
     <section class="hero">
       <div class="hero__content">
         <div>
           <p class="eyebrow">Special Projects Around Europe</p>
-          <h1 class="hero__title">Artistic Dialogue in Color, Movement and Identity</h1>
-        </div>
-
-        <div class="hero__meta">
-          <span class="hero__pill">{{ artists|length }} Active Artists</span>
-          <span class="hero__pill">Original Works</span>
-          <span class="hero__pill">Curated Collection</span>
-        </div>
-
-        <p class="hero__lead">
-          A curated artistic platform bringing together expressive contemporary work, visual storytelling, and international special projects.
-        </p>
-
-        <div class="hero__actions">
-          <a href="#artists" class="btn btn--primary">Meet the Artists</a>
-          <a href="#selected-works" class="btn btn--ghost">View Selected Works</a>
-        </div>
-      </div>
-
-      <div class="hero__media">
-        <div class="hero__portrait-card">
-          {% with first_artist=artists.0 %}
-            {% if first_artist.portrait %}
-              <img
-                src="{{ first_artist.portrait.url }}"
-                alt="{{ first_artist.name }}"
-                class="hero__portrait"
-              >
-            {% else %}
-              <div class="hero__fallback">
-                <div>
-                  <strong>{{ first_artist.name }}</strong><br>
-                  <span>Artist portrait coming soon</span>
-                </div>
-              </div>
-            {% endif %}
-          {% endwith %}
-        </div>
-      </div>
-    </section>
-
-    <section id="artists" class="intro">
-      <div class="section-heading">
-        <p class="eyebrow">Artists</p>
-        <h2 class="section-title">Featured Profiles</h2>
-      </div>
-
-      <div class="artists-grid">
-        {% for artist_item in artists %}
-          <article class="artist-card">
-            <div class="artist-card__media">
-              {% if artist_item.portrait %}
-                <img src="{{ artist_item.portrait.url }}" alt="{{ artist_item.name }}" class="artist-card__image">
-              {% else %}
-                <div class="artist-card__placeholder">
-                  <strong>{{ artist_item.name }}</strong>
-                </div>
-              {% endif %}
-            </div>
-
-            <div class="artist-card__body">
-              <p class="artist-card__eyebrow">Artist Profile</p>
-              <h3 class="artist-card__title">{{ artist_item.name }}</h3>
-
-              {% if artist_item.city %}
-                <p class="artist-card__location">{{ artist_item.city }}</p>
-              {% endif %}
-
-              {% if artist_item.short_bio %}
-                <p class="artist-card__text">{{ artist_item.short_bio }}</p>
-              {% elif artist_item.biography %}
-                <p class="artist-card__text">{{ artist_item.biography|truncatewords:38 }}</p>
-              {% elif artist_item.statement %}
-                <p class="artist-card__text">{{ artist_item.statement|truncatewords:38 }}</p>
-              {% endif %}
-
-              <div class="link-row">
-                {% if artist_item.instagram_url %}
-                  <a href="{{ artist_item.instagram_url }}" target="_blank" rel="noopener noreferrer" class="text-link">Instagram</a>
-                {% endif %}
-                {% if artist_item.website_url %}
-                  <a href="{{ artist_item.website_url }}" target="_blank" rel="noopener noreferrer" class="text-link">Website</a>
-                {% endif %}
-                {% if artist_item.facebook_url %}
-                  <a href="{{ artist_item.facebook_url }}" target="_blank" rel="noopener noreferrer" class="text-link">Facebook</a>
-                {% endif %}
-                {% if artist_item.linkedin_url %}
-                  <a href="{{ artist_item.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-link">LinkedIn</a>
-                {% endif %}
-                {% if artist_item.ecommerce_portal_url %}
-                  <a href="{{ artist_item.ecommerce_portal_url }}" target="_blank" rel="noopener noreferrer" class="text-link">Shop</a>
-                {% endif %}
-              </div>
-            </div>
-          </article>
-        {% endfor %}
-      </div>
-    </section>
-
-  {% elif artist %}
-    <section class="hero">
-      <div class="hero__content">
-        <div>
-          <p class="eyebrow">Contemporary Artist</p>
-          <h1 class="hero__title">{{ artist.name }}</h1>
+          <h1 class="hero__title"> Artist Julius Njau & {{ artist.name }}</h1>
         </div>
 
         <div class="hero__meta">
@@ -207,8 +103,8 @@
     <section class="hero">
       <div class="hero__content">
         <div>
-          <p class="eyebrow">Artist Portfolio</p>
-          <h1 class="hero__title">Contemporary Art Collection</h1>
+          <p class="eyebrow">Julius Njau & Ana Belen S. Ramirez</p>
+          <h1 class="hero__title">EU Special Projects</h1>
         </div>
         <p class="hero__lead">
           Explore a curated gallery of original works, distinctive series, and collector-focused presentation.
@@ -283,27 +179,7 @@
     {% endif %}
   </section>
 
-  {% if artists %}
-    <section id="contact" class="contact-panel">
-      <div class="contact-panel__inner">
-        <p class="eyebrow">Inquiries</p>
-        <h2 class="contact-panel__title">Artwork Availability & Collaborations</h2>
-        <p class="contact-panel__text">
-          For artwork availability, commissions, exhibitions, collaborations, or general inquiries, please get in touch directly with the active artist profiles below.
-        </p>
-
-        <div class="link-row">
-          {% for artist_item in artists %}
-            {% if artist_item.contact_email %}
-              <a class="btn btn--primary" href="mailto:{{ artist_item.contact_email }}">
-                {{ artist_item.name }}
-              </a>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% elif artist and artist.contact_email %}
+  {% if artist and artist.contact_email %}
     <section id="contact" class="contact-panel">
       <div class="contact-panel__inner">
         <p class="eyebrow">Inquiries</p>

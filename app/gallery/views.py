@@ -2,12 +2,13 @@ from django.shortcuts import get_object_or_404, render
 from .models import ArtistProfile, Artwork, Series
 
 def home(request):
-    artist = ArtistProfile.objects.filter(is_active=True).first()
+    artists = list(ArtistProfile.objects.filter(is_active=True).order_by("-updated_at"))
+    artist = artists[0] if artists else None
     featured = (
         Artwork.objects.filter(status=Artwork.Status.PUBLISHED)
         .order_by("display_order", "-created_at")[:12]
     )
-    return render(request, "gallery/home.html", {"artist": artist, "featured": featured})
+    return render(request, "gallery/home.html", {"artists": artists, "artist": artist, "featured": featured})
 
 
 def artworks_list(request):
