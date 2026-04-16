@@ -34,7 +34,7 @@
       </div>
 
  <div class="hero__media">
-  <div class="hero__portrait-card" style="display:flex; gap:12px; flex-wrap:wrap;">
+  <div class="hero__portrait-card">
     
     {% for artist in artists %}
       <div>
@@ -59,73 +59,86 @@
 </div>
     </section>
 
-    <section class="intro">
-      <div class="intro__inner">
-        <aside class="intro__sidebar">
+<section class="intro">
+  <div class="intro__inner" style="display:grid; gap:24px;">
+    {% for artist in artists %}
+      <article class="artist-intro-card" style="display:grid; gap:16px; grid-template-columns: minmax(140px, 220px) 1fr; align-items:start;">
+        <div class="artist-intro-card__media">
+          {% if artist.portrait %}
+            <img
+              src="{{ artist.portrait.url }}"
+              alt="{{ artist.name }}"
+              class="hero__portrait"
+              style="width:100%; max-width:220px; height:auto; object-fit:cover; border-radius:12px;"
+            >
+          {% else %}
+            <div class="hero__fallback" style="min-height:180px;">
+              <div>
+                <strong>{{ artist.name }}</strong><br>
+                <span>{% trans "Artist portrait coming soon" %}</span>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="artist-intro-card__content">
+          <h2 class="section-title" style="margin-bottom:10px;">{{ artist.name }}</h2>
+
           {% if artist.city %}
-            <p class="intro__label">{% trans "Based in" %}</p>
-            <p class="intro__value">{{ artist.city }}</p>
-          {% endif %}
-        </aside>
-
-        <div class="intro__copy">
-          {% if artist.short_bio %}
-            <p>{{ artist.short_bio }}</p>
+            <aside class="intro__sidebar" style="margin-bottom:12px;">
+              <p class="intro__label">{% trans "Based in" %}</p>
+              <p class="intro__value">{{ artist.city }}</p>
+            </aside>
           {% endif %}
 
-          {% if artist.biography %}
-            <p>{{ artist.biography|truncatewords:70 }}</p>
-          {% elif artist.statement and not artist.short_bio %}
-            <p>{{ artist.statement|truncatewords:70 }}</p>
-          {% endif %}
+          <div class="intro__copy">
+            {% if artist.short_bio %}
+              <p>{{ artist.short_bio }}</p>
+            {% endif %}
 
-          <div class="link-row">
-            {% if artist.instagram_url %}
-              <a href="{{ artist.instagram_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Instagram" %}</a>
+            {% if artist.biography %}
+              <p>{{ artist.biography|truncatewords:70 }}</p>
+            {% elif artist.statement and not artist.short_bio %}
+              <p>{{ artist.statement|truncatewords:70 }}</p>
             {% endif %}
-            {% if artist.website_url %}
-              <a href="{{ artist.website_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Website" %}</a>
-            {% endif %}
-            {% if artist.facebook_url %}
-              <a href="{{ artist.facebook_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Facebook" %}</a>
-            {% endif %}
-            {% if artist.linkedin_url %}
-              <a href="{{ artist.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "LinkedIn" %}</a>
-            {% endif %}
-            {% if artist.ecommerce_portal_url %}
-              <a href="{{ artist.ecommerce_portal_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Shop" %}</a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% else %}
-    <section class="hero">
-      <div class="hero__content">
-        <div>
-          <p class="eyebrow">{% trans "Julius Njau & Ana Belen S. Ramirez" %}</p>
-          <h1 class="hero__title">{% trans "EU Special Projects" %}</h1>
-        </div>
-        <p class="hero__lead">
-          {% trans "Explore a curated gallery of original works, distinctive series, and collector-focused presentation." %}
-        </p>
-        <div class="hero__actions">
-          <a href="#selected-works" class="btn btn--primary">{% trans "View Selected Works" %}</a>
-        </div>
-      </div>
 
-      <div class="hero__media">
-        <div class="hero__portrait-card">
-          <div class="hero__fallback">
-            <div>
-              <strong>{% trans "Artist profile pending" %}</strong><br>
-              <span>{% trans "Add an active ArtistProfile from the admin panel" %}</span>
+            <div class="link-row">
+              {% if artist.instagram_url %}
+                <a href="{{ artist.instagram_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Instagram" %}</a>
+              {% endif %}
+              {% if artist.website_url %}
+                <a href="{{ artist.website_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Website" %}</a>
+              {% endif %}
+              {% if artist.facebook_url %}
+                <a href="{{ artist.facebook_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Facebook" %}</a>
+              {% endif %}
+              {% if artist.linkedin_url %}
+                <a href="{{ artist.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "LinkedIn" %}</a>
+              {% endif %}
+              {% if artist.ecommerce_portal_url %}
+                <a href="{{ artist.ecommerce_portal_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Shop" %}</a>
+              {% endif %}
             </div>
           </div>
         </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% else %}
+  <section class="hero">
+    <div class="hero__content">
+      <div>
+        <p class="eyebrow">{% trans "Julius Njau & Ana Belen S. Ramirez" %}</p>
+        <h1 class="hero__title">{% trans "EU Special Projects" %}</h1>
       </div>
-    </section>
-  {% endif %}
+      <p class="hero__lead">
+        {% trans "Explore a curated gallery of original works, distinctive series, and collector-focused presentation." %}
+      </p>
+      <div class="hero__actions">
+        <a href="#selected-works" class="btn btn--primary">{% trans "View Selected Works" %}</a>
+      </div>
+    </div>
 
   <section id="selected-works" class="works-section">
     <div class="section-heading">
