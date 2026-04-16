@@ -1,207 +1,55 @@
 {% extends "gallery/base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Home" %}{% endblock %}
+{% block title %}{% trans "Works" %}{% endblock %}
 
 {% block content %}
+  <h1 class="h1">{% trans "Works" %}</h1>
 
-  {% if artists %}
-    <section class="hero">
-      <div class="hero__content">
-        <div>
-          <p class="eyebrow">{% trans "Special Projects Around Europe" %}</p>
-          <h1 class="hero__title">{% trans "Artist Julius Njau & Ana Belen S. Ramirez" %}</h1>
-        </div>
-
-        <div class="hero__meta">
-          <span class="hero__pill">{% trans "Original Works" %}</span>
-          <span class="hero__pill">{% trans "Selected Collection" %}</span>
-          <span class="hero__pill">{% trans "International Collaboration" %}</span>
-        </div>
-
-        <p class="hero__lead">
-          {% trans "Discover a curated body of work shaped by expressive forms, personal vision, and contemporary artistic language across a collaborative artistic project." %}
-        </p>
-
-        <div class="hero__actions">
-          <a href="#selected-works" class="btn btn--primary">{% trans "View Selected Works" %}</a>
-          <a href="#artists" class="btn btn--ghost">{% trans "Meet the Artists" %}</a>
-        </div>
-      </div>
-    </section>
-
-    <section id="artists" class="artists-section">
-      <div class="section-heading">
-        <p class="eyebrow">{% trans "Artists" %}</p>
-        <h2 class="section-title">{% trans "The Artists Behind the Project" %}</h2>
-      </div>
-
-      <div class="artists-grid">
-        {% for artist in artists %}
-          <article class="artist-card">
-            <div class="artist-card__media">
-              {% if artist.portrait %}
-                <img
-                  src="{{ artist.portrait.url }}"
-                  alt="{{ artist.name }}"
-                  class="artist-card__portrait"
-                >
-              {% else %}
-                <div class="artist-card__fallback">
-                  <div>
-                    <strong>{{ artist.name }}</strong><br>
-                    <span>{% trans "Artist portrait coming soon" %}</span>
-                  </div>
-                </div>
-              {% endif %}
-            </div>
-
-            <div class="artist-card__body">
-              <h3 class="artist-card__title">{{ artist.name }}</h3>
-
-              {% if artist.city %}
-                <p class="artist-card__city">{{ artist.city }}</p>
-              {% endif %}
-
-              {% if artist.short_bio %}
-                <p class="artist-card__text">{{ artist.short_bio }}</p>
-              {% elif artist.statement %}
-                <p class="artist-card__text">{{ artist.statement|truncatewords:36 }}</p>
-              {% elif artist.biography %}
-                <p class="artist-card__text">{{ artist.biography|truncatewords:36 }}</p>
-              {% else %}
-                <p class="artist-card__text">
-                  {% trans "Artist profile information will be available soon." %}
-                </p>
-              {% endif %}
-
-              {% if artist.biography %}
-                <div class="artist-card__bio">
-                  <p>{{ artist.biography|truncatewords:80 }}</p>
-                </div>
-              {% endif %}
-
-              <div class="link-row">
-                {% if artist.instagram_url %}
-                  <a href="{{ artist.instagram_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Instagram" %}</a>
-                {% endif %}
-                {% if artist.website_url %}
-                  <a href="{{ artist.website_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Website" %}</a>
-                {% endif %}
-                {% if artist.facebook_url %}
-                  <a href="{{ artist.facebook_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Facebook" %}</a>
-                {% endif %}
-                {% if artist.linkedin_url %}
-                  <a href="{{ artist.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "LinkedIn" %}</a>
-                {% endif %}
-                {% if artist.ecommerce_portal_url %}
-                  <a href="{{ artist.ecommerce_portal_url }}" target="_blank" rel="noopener noreferrer" class="text-link">{% trans "Shop" %}</a>
-                {% endif %}
-              </div>
-
-              {% if artist.contact_email %}
-                <div class="artist-card__contact">
-                  <a href="mailto:{{ artist.contact_email }}" class="btn btn--ghost">
-                    {% trans "Contact Artist" %}
-                  </a>
-                </div>
-              {% endif %}
-            </div>
-          </article>
-        {% endfor %}
-      </div>
-    </section>
-  {% else %}
-    <section class="hero">
-      <div class="hero__content">
-        <div>
-          <p class="eyebrow">{% trans "Julius Njau & Ana Belen S. Ramirez" %}</p>
-          <h1 class="hero__title">{% trans "EU Special Projects" %}</h1>
-        </div>
-        <p class="hero__lead">
-          {% trans "Explore a curated gallery of original works, distinctive series, and collector-focused presentation." %}
-        </p>
-        <div class="hero__actions">
-          <a href="#selected-works" class="btn btn--primary">{% trans "View Selected Works" %}</a>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  <section id="selected-works" class="works-section">
-    <div class="section-heading">
-      <p class="eyebrow">{% trans "Collection" %}</p>
-      <h2 class="section-title">{% trans "Selected Works" %}</h2>
-    </div>
-
-    {% if featured %}
-      <div class="artwork-grid">
-        {% for a in featured %}
-          {% with first_image=a.images.first %}
-            <a class="artwork-card" href="{% url 'gallery:artwork_detail' a.slug %}">
-              <div class="artwork-card__media">
-                {% if a.main_image %}
-                  <img
-                    class="artwork-card__image"
-                    src="{{ a.main_image.url }}"
-                    alt="{{ a.title }}"
-                  >
-                {% elif first_image %}
-                  <img
-                    class="artwork-card__image"
-                    src="{{ first_image.image.url }}"
-                    alt="{% if first_image.alt_text %}{{ first_image.alt_text }}{% else %}{{ a.title }}{% endif %}"
-                  >
-                {% else %}
-                  <div class="artwork-card__placeholder">
-                    <div>
-                      <strong>{{ a.title }}</strong><br>
-                      <span>{% trans "Image coming soon" %}</span>
-                    </div>
-                  </div>
-                {% endif %}
-              </div>
-
-              <div class="artwork-card__body">
-                <h3 class="artwork-card__title">{{ a.title }}</h3>
-                <p class="artwork-card__meta">
-                  {% if a.year %}{{ a.year }}{% endif %}
-                  {% if a.year and a.technique %} · {% endif %}
-                  {% if a.technique %}{{ a.technique }}{% endif %}
-                  {% if a.series %} · {{ a.series.name }}{% endif %}
-                </p>
-              </div>
-            </a>
-          {% endwith %}
-        {% endfor %}
-      </div>
+  <div class="muted" style="margin-bottom:16px;">
+    {% trans "Filter by series:" %}
+    {% if not series_slug %}
+      <strong>{% trans "All" %}</strong>
     {% else %}
-      <div class="empty-box">
-        {% trans "No featured works are available yet. Publish artworks in the admin panel to display them here." %}
-      </div>
+      <a href="{% url 'gallery:artworks_list' %}">{% trans "All" %}</a>
     {% endif %}
-  </section>
 
-  {% if artists %}
-    <section id="contact" class="contact-panel">
-      <div class="contact-panel__inner">
-        <p class="eyebrow">{% trans "Inquiries" %}</p>
-        <h2 class="contact-panel__title">{% trans "Artwork Availability & Collaborations" %}</h2>
-        <p class="contact-panel__text">
-          {% trans "For artwork availability, commissions, exhibitions, collaborations, or general inquiries, please get in touch directly with the artists." %}
-        </p>
+    {% for s in series %}
+      ·
+      {% if series_slug == s.slug %}
+        <strong>{{ s.name }}</strong>
+      {% else %}
+        <a href="{% url 'gallery:artworks_list' %}?series={{ s.slug }}">{{ s.name }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
 
-        <div class="link-row">
-          {% for artist in artists %}
-            {% if artist.contact_email %}
-              <a class="btn btn--primary" href="mailto:{{ artist.contact_email }}">
-                {{ artist.name }}
-              </a>
+  {% if artworks %}
+    <div class="grid">
+      {% for a in artworks %}
+        {% with first_image=a.images.first %}
+          <a class="card" href="{% url 'gallery:artwork_detail' a.slug %}">
+            {% if a.main_image %}
+              <img class="thumb" src="{{ a.main_image.url }}" alt="{{ a.title }}">
+            {% elif first_image %}
+              <img class="thumb" src="{{ first_image.image.url }}" alt="{% if first_image.alt_text %}{{ first_image.alt_text }}{% else %}{{ a.title }}{% endif %}">
+            {% else %}
+              <div class="thumb" style="background:#f4f4f4;"></div>
             {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endif %}
 
+            <div class="card-body">
+              <div>{{ a.title }}</div>
+              <div class="meta">
+                {% if a.series %}{{ a.series.name }}{% endif %}
+                {% if a.series and a.year %} · {% endif %}
+                {% if a.year %}{{ a.year }}{% endif %}
+              </div>
+            </div>
+          </a>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">{% trans "No artworks published yet." %}</p>
+  {% endif %}
 {% endblock %}
