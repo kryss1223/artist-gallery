@@ -514,6 +514,75 @@
       line-height: 1.8;
     }
 
+    .artists-section {
+  margin-top: 4rem;
+}
+
+.artists-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.artist-card {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.artist-card__media {
+  width: 100%;
+}
+
+.artist-card__portrait {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+.artist-card__fallback {
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f4f4;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.artist-card__body {
+  padding: 1.5rem;
+}
+
+.artist-card__title {
+  margin: 0 0 0.4rem;
+  font-size: 1.5rem;
+}
+
+.artist-card__city {
+  margin: 0 0 1rem;
+  opacity: 0.7;
+}
+
+.artist-card__text,
+.artist-card__bio {
+  margin-bottom: 1rem;
+}
+
+.artist-card__contact {
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .artists-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
     @media (max-width: 1040px) {
       .hero {
         grid-template-columns: 1fr;
@@ -588,6 +657,25 @@
             <p class="brand__subtitle">Special Projects Around Europe</p>
           </div>
         </a>
+        {% load i18n %}
+
+      {% load i18n %}
+
+      <form action="{% url 'set_language' %}" method="post" class="language-switcher">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+
+        <select name="language" onchange="this.form.submit()">
+          {% get_current_language as LANGUAGE_CODE %}
+          {% get_available_languages as LANGUAGES %}
+
+          {% for lang_code, lang_name in LANGUAGES %}
+            <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
+              {{ lang_name }}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
 
         <nav class="site-nav">
           <a href="{% url 'gallery:home' %}">Home</a>

@@ -4,18 +4,30 @@ from __future__ import annotations
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.text import slugify
+from django.utils.translation import get_language
 
 
 class ArtistProfile(models.Model):
     name = models.CharField(max_length=200)
-    city = models.CharField(max_length=120, blank=True)
+    
+    city_es = models.CharField(max_length=120, blank=True)
+    city_en = models.CharField(max_length=120, blank=True)
+    city_ja = models.CharField(max_length=120, blank=True)
+
 
     portrait = models.ImageField(upload_to="artist/portraits/", blank=True, null=True)
 
-    short_bio = models.CharField(max_length=300, blank=True)
-    biography = models.TextField(blank=True)
-    statement = models.TextField(blank=True)
+    short_bio_es = models.CharField(max_length=300, blank=True)
+    short_bio_en = models.CharField(max_length=300, blank=True)
+    short_bio_ja = models.CharField(max_length=300, blank=True)
 
+    biography_es = models.TextField(blank=True)
+    biography_en = models.TextField(blank=True)
+    biography_ja = models.TextField(blank=True)
+
+    statement_es = models.TextField(blank=True)
+    statement_en = models.TextField(blank=True)
+    statement_ja = models.TextField(blank=True)
     contact_email = models.EmailField(blank=True)
 
     website_url = models.URLField(blank=True)
@@ -28,6 +40,35 @@ class ArtistProfile(models.Model):
 
     updated_at = models.DateTimeField(auto_now=True)
 
+    def _translated(self, field_base: str) -> str:
+        lang = (get_language() or "es").split("-")[0]
+
+        value = getattr(self, f"{field_base}_{lang}", "")
+        if value:
+            return value
+
+        value_es = getattr(self, f"{field_base}_es", "")
+        if value_es:
+            return value_es
+
+        return ""
+
+    @property
+    def city(self):
+        return self._translated("city")
+
+    @property
+    def short_bio(self):
+        return self._translated("short_bio")
+
+    @property
+    def biography(self):
+        return self._translated("biography")
+
+    @property
+    def statement(self):
+        return self._translated("statement")
+    
     class Meta:
         verbose_name = "Artist Profile"
         verbose_name_plural = "Artist Profile"
@@ -37,22 +78,48 @@ class ArtistProfile(models.Model):
 
 
 class Series(models.Model):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=220, unique=True, blank=True)
-    description = models.TextField(blank=True)
-    display_order = models.PositiveIntegerField(default=0)
+    name_es = models.CharField(max_length=200)
+    name_en = models.CharField(max_length=200, blank=True)
+    name_ja = models.CharField(max_length=200, blank=True)
 
+    slug = models.SlugField(max_length=220, unique=True, blank=True)
+    description_es = models.TextField(blank=True)
+    description_en = models.TextField(blank=True)
+    description_ja = models.TextField(blank=True)
+
+    display_order = models.PositiveIntegerField(default=0)
+    def _translated(self, field_base: str) -> str:
+        lang = (get_language() or "es").split("-")[0]
+
+        value = getattr(self, f"{field_base}_{lang}", "")
+        if value:
+            return value
+
+        value_es = getattr(self, f"{field_base}_es", "")
+        if value_es:
+            return value_es
+
+        return ""
+
+    @property
+    def name(self):
+        return self._translated("name")
+
+    @property
+    def description(self):
+        return self._translated("description")
     class Meta:
-        ordering = ["display_order", "name"]
+        ordering = ["display_order", "name_es"]
         verbose_name = "Series"
         verbose_name_plural = "Series"
+    
 
     def __str__(self) -> str:
-        return self.name
+        return self.name_es
 
     def save(self, *args, **kwargs) -> None:
         if not self.slug:
-            base = slugify(self.name)[:200] or "series"
+            base = slugify(self.name_es)[:200] or "series"
             slug = base
             i = 2
             while Series.objects.filter(slug=slug).exclude(pk=self.pk).exists():
@@ -76,32 +143,35 @@ class Artwork(models.Model):
     slug = models.SlugField(max_length=240, unique=True, blank=True)
 
     status = models.CharField(max_length=12, choices=Status.choices, default=Status.DRAFT)
-    availability = models.CharField(
-        max_length=9, choices=Availability.choices, default=Availability.AVAILABLE
-    )
+    availability = models.CharField(max_length=9, choices=Availability.choices, default=Availability.AVAILABLE)
 
     is_featured = models.BooleanField(default=False)
     display_order = models.PositiveIntegerField(default=0)
 
-    title = models.CharField(max_length=220)
+    title_es = models.CharField(max_length=220)
+    title_en = models.CharField(max_length=220, blank=True)
+    title_ja = models.CharField(max_length=220, blank=True)
+
     year = models.PositiveIntegerField(blank=True, null=True)
 
-    technique = models.CharField(max_length=220, blank=True)
-    support = models.CharField(max_length=120, blank=True)
+    technique_es = models.CharField(max_length=220, blank=True)
+    technique_en = models.CharField(max_length=220, blank=True)
+    technique_ja = models.CharField(max_length=220, blank=True)
 
-    height_cm = models.DecimalField(
-        max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)]
-    )
-    width_cm = models.DecimalField(
-        max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)]
-    )
-    depth_cm = models.DecimalField(
-        max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)]
-    )
+    support_es = models.CharField(max_length=120, blank=True)
+    support_en = models.CharField(max_length=120, blank=True)
+    support_ja = models.CharField(max_length=120, blank=True)
 
-    series = models.ForeignKey(Series, on_delete=models.SET_NULL, null=True, blank=True)
+    height_cm = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)])
+    width_cm = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)])
+    depth_cm = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)])
 
-    description = models.TextField(blank=True)
+    series = models.ForeignKey("Series", on_delete=models.SET_NULL, null=True, blank=True)
+
+    description_es = models.TextField(blank=True)
+    description_en = models.TextField(blank=True)
+    description_ja = models.TextField(blank=True)
+
     tags = models.CharField(
         max_length=300,
         blank=True,
@@ -110,26 +180,49 @@ class Artwork(models.Model):
 
     price_eur = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     show_price = models.BooleanField(default=False)
-    enquire_only = models.BooleanField(
-        default=True,
-        help_text="If true, show 'Enquire/Consult' instead of direct purchase even if price exists.",
-    )
+    enquire_only = models.BooleanField(default=True)
 
-    # Optional: handy main image shortcut (you can also use first ArtworkImage by order)
     main_image = models.ImageField(upload_to="artworks/main/", blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    def _translated(self, field_base: str) -> str:
+        lang = (get_language() or "es").split("-")[0]
 
+        value = getattr(self, f"{field_base}_{lang}", "")
+        if value:
+            return value
+
+        value_es = getattr(self, f"{field_base}_es", "")
+        if value_es:
+            return value_es
+
+        return ""
+
+    @property
+    def title(self):
+        return self._translated("title")
+
+    @property
+    def technique(self):
+        return self._translated("technique")
+
+    @property
+    def support(self):
+        return self._translated("support")
+
+    @property
+    def description(self):
+        return self._translated("description")
     class Meta:
         ordering = ["display_order", "-created_at"]
 
     def __str__(self) -> str:
-        return self.title
+        return self.title_es
 
     def save(self, *args, **kwargs) -> None:
         if not self.slug:
-            base = slugify(self.title)[:200] or "artwork"
+            base = slugify(self.title_es)[:200] or "artwork"
             slug = base
             i = 2
             while Artwork.objects.filter(slug=slug).exclude(pk=self.pk).exists():
@@ -142,10 +235,36 @@ class Artwork(models.Model):
 class ArtworkImage(models.Model):
     artwork = models.ForeignKey(Artwork, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="artworks/gallery/")
-    caption = models.CharField(max_length=250, blank=True)
-    alt_text = models.CharField(max_length=250, blank=True)
-    order = models.PositiveIntegerField(default=0)
+    
+    caption_es = models.CharField(max_length=250, blank=True)
+    caption_en = models.CharField(max_length=250, blank=True)
+    caption_ja = models.CharField(max_length=250, blank=True)
 
+    alt_text_es = models.CharField(max_length=250, blank=True)
+    alt_text_en = models.CharField(max_length=250, blank=True)
+    alt_text_ja = models.CharField(max_length=250, blank=True)
+    order = models.PositiveIntegerField(default=0)
+    
+    def _translated(self, field_base: str) -> str:
+        lang = (get_language() or "es").split("-")[0]
+
+        value = getattr(self, f"{field_base}_{lang}", "")
+        if value:
+            return value
+
+        value_es = getattr(self, f"{field_base}_es", "")
+        if value_es:
+            return value_es
+
+        return ""
+
+    @property
+    def caption(self):
+        return self._translated("caption")
+
+    @property
+    def alt_text(self):
+        return self._translated("alt_text")
     class Meta:
         ordering = ["order", "id"]
         verbose_name = "Artwork Image"
