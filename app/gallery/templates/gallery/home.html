@@ -11,29 +11,19 @@
         <div>
           <p class="eyebrow">{% trans "Special Projects Around Europe" %}</p>
           <h1 class="hero__title">
-            {% blocktrans with artist_name=artist.name %}Artist Julius Njau & {{ artist_name }}{% endblocktrans %}
+            {% blocktrans with artist_name=artist.name %}Artist Julius Njau & Ana Belen S. Ramirez{% endblocktrans %}
           </h1>
         </div>
 
         <div class="hero__meta">
-          {% if artist.city %}
-            <span class="hero__pill">{{ artist.city }}</span>
-          {% endif %}
+          <span class="hero__pill">Spain</span>
+          <span class="hero__pill">Japan</span>
           <span class="hero__pill">{% trans "Original Works" %}</span>
           <span class="hero__pill">{% trans "Selected Collection" %}</span>
         </div>
-
-        {% if artist.statement %}
-          <p class="hero__lead">{{ artist.statement|truncatewords:34 }}</p>
-        {% elif artist.short_bio %}
-          <p class="hero__lead">{{ artist.short_bio }}</p>
-        {% elif artist.biography %}
-          <p class="hero__lead">{{ artist.biography|truncatewords:34 }}</p>
-        {% else %}
           <p class="hero__lead">
             {% trans "Discover a curated body of work shaped by expressive forms, personal vision, and contemporary artistic language." %}
           </p>
-        {% endif %}
 
         <div class="hero__actions">
           <a href="#selected-works" class="btn btn--primary">{% trans "View Selected Works" %}</a>
@@ -43,24 +33,30 @@
         </div>
       </div>
 
-      <div class="hero__media">
-        <div class="hero__portrait-card">
-          {% if artist.portrait %}
-            <img
-              src="{{ artist.portrait.url }}"
-              alt="{{ artist.name }}"
-              class="hero__portrait"
-            >
-          {% else %}
-            <div class="hero__fallback">
-              <div>
-                <strong>{{ artist.name }}</strong><br>
-                <span>{% trans "Artist portrait coming soon" %}</span>
-              </div>
+ <div class="hero__media">
+  <div class="hero__portrait-card" style="display:flex; gap:12px; flex-wrap:wrap;">
+    
+    {% for artist in artists %}
+      <div>
+        {% if artist.portrait %}
+          <img
+            src="{{ artist.portrait.url }}"
+            alt="{{ artist.name }}"
+            class="hero__portrait"
+          >
+        {% else %}
+          <div class="hero__fallback">
+            <div>
+              <strong>{{ artist.name }}</strong><br>
+              <span>{% trans "Artist portrait coming soon" %}</span>
             </div>
-          {% endif %}
-        </div>
+          </div>
+        {% endif %}
       </div>
+    {% endfor %}
+
+  </div>
+</div>
     </section>
 
     <section class="intro">
