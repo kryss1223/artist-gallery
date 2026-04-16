@@ -1,27 +1,43 @@
 {% extends "gallery/base.html" %}
+{% load i18n %}
+
 {% block title %}{{ artwork.title }}{% endblock %}
+
 {% block content %}
   <h1 class="h1">{{ artwork.title }}</h1>
+
   <div class="muted">
-    {% if artwork.year %}{{ artwork.year }} · {% endif %}
-    {% if artwork.series %}{{ artwork.series.name }} · {% endif %}
-    {{ artwork.technique }}
+    {% if artwork.year %}{{ artwork.year }}{% endif %}
+    {% if artwork.year and artwork.series %} · {% endif %}
+    {% if artwork.series %}{{ artwork.series.name }}{% endif %}
+    {% if artwork.technique and (artwork.year or artwork.series) %} · {% endif %}
+    {% if artwork.technique %}{{ artwork.technique }}{% endif %}
   </div>
 
   <div style="margin:18px 0;">
     {% if artwork.main_image %}
-      <img style="width:100%; max-height:40vh; object-fit:contain; border:1px solid var(--line); border-radius:10px;"
-           src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
+      <img
+        style="width:100%; max-height:40vh; object-fit:contain; border:1px solid var(--line); border-radius:10px;"
+        src="{{ artwork.main_image.url }}"
+        alt="{{ artwork.title }}"
+      >
     {% endif %}
   </div>
 
-  {% if artwork.images.all %}
+  {% if artwork.images.exists %}
     <div class="grid">
       {% for img in artwork.images.all %}
         <div class="card">
-          <img class="thumb" style="aspect-ratio:4/3;" src="{{ img.image.url }}" alt="{{ img.alt_text|default:artwork.title }}">
+          <img
+            class="thumb"
+            style="aspect-ratio:4/3;"
+            src="{{ img.image.url }}"
+            alt="{{ img.alt_text|default:artwork.title }}"
+          >
           {% if img.caption %}
-            <div class="card-body"><div class="meta">{{ img.caption }}</div></div>
+            <div class="card-body">
+              <div class="meta">{{ img.caption }}</div>
+            </div>
           {% endif %}
         </div>
       {% endfor %}
@@ -43,7 +59,7 @@
       {% if artwork.show_price and artwork.price_eur and not artwork.enquire_only %}
         <div><strong>{{ artwork.price_eur }} €</strong></div>
       {% else %}
-        <div class="muted">Enquire for availability</div>
+        <div class="muted">{% trans "Enquire for availability" %}</div>
       {% endif %}
     </div>
   </div>
