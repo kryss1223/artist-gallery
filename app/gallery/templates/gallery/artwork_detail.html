@@ -10,7 +10,6 @@
     {% if artwork.year %}{{ artwork.year }}{% endif %}
     {% if artwork.year and artwork.series %} · {% endif %}
     {% if artwork.series %}{{ artwork.series.name }}{% endif %}
-    {% if artwork.technique and (artwork.year or artwork.series) %} · {% endif %}
     {% if artwork.technique %}{{ artwork.technique }}{% endif %}
   </div>
 
