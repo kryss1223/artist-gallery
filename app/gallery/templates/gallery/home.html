@@ -35,23 +35,21 @@
       </div>
 
       <div class="hero__media">
-        <div class="hero__portrait-card">
+        <div class="hero__artists-strip">
           {% for artist in artists %}
-            <div>
+            <div class="hero__artist-chip">
               {% if artist.portrait %}
                 <img
                   src="{{ artist.portrait.url }}"
                   alt="{{ artist.name }}"
-                  class="hero__portrait"
+                  class="hero__artist-image"
                 >
               {% else %}
-                <div class="hero__fallback">
-                  <div>
-                    <strong>{{ artist.name }}</strong><br>
-                    <span>{% trans "Artist portrait coming soon" %}</span>
-                  </div>
+                <div class="hero__artist-fallback">
+                  <strong>{{ artist.name }}</strong>
                 </div>
               {% endif %}
+              <p class="hero__artist-name">{{ artist.name }}</p>
             </div>
           {% endfor %}
         </div>
@@ -59,19 +57,18 @@
     </section>
 
     <section class="intro">
-      <div class="intro__inner" style="display:grid; gap:24px;">
+      <div class="intro__artists-list">
         {% for artist in artists %}
-          <article class="artist-intro-card" style="display:grid; gap:16px; grid-template-columns: minmax(140px, 220px) 1fr; align-items:start;">
-            <div class="artist-intro-card__media">
+          <article class="artist-feature">
+            <div class="artist-feature__media">
               {% if artist.portrait %}
                 <img
                   src="{{ artist.portrait.url }}"
                   alt="{{ artist.name }}"
-                  class="hero__portrait"
-                  style="width:100%; max-width:220px; height:auto; object-fit:cover; border-radius:12px;"
+                  class="artist-feature__image"
                 >
               {% else %}
-                <div class="hero__fallback" style="min-height:180px;">
+                <div class="artist-feature__fallback">
                   <div>
                     <strong>{{ artist.name }}</strong><br>
                     <span>{% trans "Artist portrait coming soon" %}</span>
@@ -80,14 +77,14 @@
               {% endif %}
             </div>
 
-            <div class="artist-intro-card__content">
-              <h2 class="section-title" style="margin-bottom:10px;">{{ artist.name }}</h2>
+            <div class="artist-feature__content">
+              <h2 class="section-title artist-feature__title">{{ artist.name }}</h2>
 
               {% if artist.city %}
-                <aside class="intro__sidebar" style="margin-bottom:12px;">
+                <div class="artist-feature__meta">
                   <p class="intro__label">{% trans "Based in" %}</p>
                   <p class="intro__value">{{ artist.city }}</p>
-                </aside>
+                </div>
               {% endif %}
 
               <div class="intro__copy">
@@ -124,7 +121,6 @@
         {% endfor %}
       </div>
     </section>
-
   {% else %}
     <section class="hero">
       <div class="hero__content">
