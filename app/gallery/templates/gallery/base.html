@@ -692,7 +692,29 @@
 .artist-feature__meta {
   margin-bottom: 16px;
 }
+.flags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 6px;
+}
 
+.flags img {
+  width: 22px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 3px;
+  cursor: pointer;
+
+  /* toque coquette */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.flags img:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+}
 @media (max-width: 1040px) {
   .artist-feature {
     grid-template-columns: 1fr;
@@ -783,6 +805,8 @@
       .site-footer__inner {
         flex-direction: column;
       }
+
+
     }
   </style>
 
@@ -826,7 +850,13 @@
           <a href="{% url 'gallery:home' %}">Home</a>
           <a href="{% url 'gallery:artworks_list' %}">Collection</a>
           <a href="{% url 'gallery:series_list' %}">Series</a>
-          <a class="nav-cta" href="{% url 'gallery:home' %}#contact">Inquiries</a>
+          
+          <div class="flags">
+            <img src="{% static '../../static/img/spain_flag.jpeg' %}" alt="ES">
+            <img src="{% static '../../static/img/tanzania_flag.jpeg' %}" alt="EN">
+          </div>
+
+           <a class="nav-cta" href="{% url 'gallery:home' %}#contact">Inquiries</a>
         </nav>
       </div>
     </header>
