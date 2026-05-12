@@ -36,24 +36,6 @@
 
       <div class="hero__media">
         <img src="../../static/img/world_map.jpeg" alt="Europe map" class="hero__map">
-        <div class="hero__artists-strip">
-          {% for artist in artists %}
-            <div class="hero__artist-chip">
-              {% if artist.portrait %}
-                <img
-                  src="{{ artist.portrait.url }}"
-                  alt="{{ artist.name }}"
-                  class="hero__artist-image"
-                >
-              {% else %}
-                <div class="hero__artist-fallback">
-                  <strong>{{ artist.name }}</strong>
-                </div>
-              {% endif %}
-              <p class="hero__artist-name">{{ artist.name }}</p>
-            </div>
-          {% endfor %}
-        </div>
       </div>
     </section>
 
